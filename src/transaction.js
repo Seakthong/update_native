@@ -21,7 +21,7 @@
 import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import {getAllCategoies,saveRecord} from './global'
+import {getAllCategoies,saveRecord,removeCategory} from './global'
 
 export default class transaction extends Component {
     state = {
@@ -64,6 +64,18 @@ export default class transaction extends Component {
         //     console.log(err)
         // })
     }
+
+    removeCategoryById = (_id)=> {
+        console.log(`im working`);
+        
+        removeCategory({id:_id}).then(data => {
+            this.refreshCategory();
+        }).catch(err => {
+            console.log(err)
+        })
+        // removeCategory
+    }
+
     render() {
         return (
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
@@ -79,7 +91,18 @@ export default class transaction extends Component {
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => (
                             <View style={styles.container}>
-                               <View>
+                                <View>
+                                    <TouchableOpacity onPress={() =>{ 
+                                        this.removeCategoryById(item.id)
+                                    }} style={{textAlign: 'right'}}>
+                                            <Text >
+                                                    X
+                                                
+                                            </Text>
+                                    </TouchableOpacity>
+                                </View>
+                               <View >
+                                  
                                     <Text >
                                         {item.name}
                                        
