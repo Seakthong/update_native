@@ -18,14 +18,14 @@
 //     </View>)
 // }
 
-import React, { Component } from 'react';
+import React, { Component  ,useState} from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {getAllCategoies,saveRecord,removeCategory} from './global'
 
 export default class transaction extends Component {
     state = {
-        
+        input : '1',
         data: []
     }
     componentDidMount(){
@@ -58,15 +58,14 @@ export default class transaction extends Component {
         /**
          * refresh redux
          */
-        // result.then(data => {
-        //     console.log(data)
-        // }).catch(err => {
-        //     console.log(err)
-        // })
+        result.then(data => {
+            this.textInput.clear()
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     removeCategoryById = (_id)=> {
-        console.log(`im working`);
         
         removeCategory({id:_id}).then(data => {
             this.refreshCategory();
@@ -89,50 +88,54 @@ export default class transaction extends Component {
                         horizontal={true}
                         data={this.state.data}
                         showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                            <View style={styles.container}>
-                                <View>
-                                    <TouchableOpacity onPress={() =>{ 
-                                        this.removeCategoryById(item.id)
-                                    }} style={{textAlign: 'right'}}>
-                                            <Text >
-                                                    X
-                                                
-                                            </Text>
-                                    </TouchableOpacity>
-                                </View>
-                               <View >
-                                  
+                        renderItem={({ item }) => {
+                            
+                           return (
+                                <View style={styles.container}>
+                                    <View>
+                                        <TouchableOpacity onPress={() =>{ 
+                                            this.removeCategoryById(item.id)
+                                        }} style={{textAlign: 'right'}}>
+                                                <Text >
+                                                        X
+                                                    
+                                                </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                   <View >
+                                      
+                                        <Text >
+                                            {item.name}
+                                           
+                                        </Text>
+                                        
+                                   </View>
+                                    <View>
+                                        <Image source={{ uri: item.image }} style={styles.images} />
+                                        {/* <Image source={{uri: item.image}} style={styles.images}/> */}
+                                    </View>
+                                    <View>
+                                   
                                     <Text >
-                                        {item.name}
-                                       
-                                    </Text>
+                                            {item.price+'$'}
+                                        </Text> 
+                                    </View>
+                                    <View>
                                     
-                               </View>
-                                <View>
-                                    <Image source={{ uri: item.image }} style={styles.images} />
-                                    {/* <Image source={{uri: item.image}} style={styles.images}/> */}
+                                        <TextInput
+                                            ref={input => { this.textInput = input }}
+                                            style={styles.textInputStyle1}
+                                            onChangeText={(data) => {item.amount= data;}}
+                                        />
+                                    </View>
+                                    <TouchableOpacity onPress={() => { this.yourFunction({id : item.id, price : item.price,amount : item.amount});  item.amount = 0; }} activeOpacity={0.7} style={styles.button} >
+                                        <Text style={styles.buttonText}> Push</Text>
+                                    </TouchableOpacity>
+    
                                 </View>
-                                <View>
-                               
-                                <Text >
-                                        {item.price+'$'}
-                                    </Text> 
-                                </View>
-                                <View>
-                                
-                                    <TextInput
-                                        style={styles.textInputStyle1}
-                                        onChangeText={val => {item.amount = val}}
-                                    />
-                                </View>
-                                <TouchableOpacity onPress={() => { this.yourFunction({id : item.id, price : item.price,amount : item.amount}) }} activeOpacity={0.7} style={styles.button} >
-                                    <Text style={styles.buttonText}> Push</Text>
-                                </TouchableOpacity>
-
-                            </View>
-
-                        )}
+    
+                            )
+                        }}
                         keyExtractor={item => item.id}
                     />
                 </ScrollView>
