@@ -1,24 +1,12 @@
-// import React from 'react'
-// import { View  ,Text} from 'native-base'
 
-
-
-// export const History = () => {
-//     const result = getTodayRecord();
-//     result.then(data => {
-//         console.log(`im working from historuy`)
-//         console.log(data)
-//     })
-//     return (
-//         <View>
-//             <Text>hahahah</Text>
-//         </View>
-//     )
-// }
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, StyleSheet, TouchableOpacity,Dimensions } from 'react-native';
 import {getTodayRecord,removeRecord} from './global'
 import { ThemeConsumer } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
+
+const screen = parseInt(Dimensions.get("screen").height * 0.65);
+
 class history extends Component {
     state = {
         data: []
@@ -27,6 +15,7 @@ class history extends Component {
 
     componentWillMount(){
          const result = getTodayRecord();
+        
          result.then(_data => {
                 this.setState({
                     data : _data
@@ -36,6 +25,7 @@ class history extends Component {
     }
     refreshComponent =() => {
         const result = getTodayRecord();
+     
          result.then(_data => {
                 this.setState({
                     data : _data
@@ -74,20 +64,23 @@ class history extends Component {
                         <View style={styles.textHeader}><Text style={styles.textStyle}>Action</Text></View>
 
                     </View>
-                    <FlatList
-                        data={this.state.data}
-                        renderItem={({ item }) => (
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={styles.textTable}><Text >{item.id}</Text></View>
-                                <View style={styles.textTable}><Text>{item.category_name}</Text></View>
-                                <View style={styles.textTable}><Text>{item.service_amount}</Text></View>
-                                <TouchableOpacity onPress={() => { this.toRemove(item.id) }} activeOpacity={0.7} style={styles.button} >
-                                    <Text style={styles.buttonText}> clear </Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                        keyExtractor={item => item.id}
-                    />
+                    <ScrollView style={styles.scrollView}>
+                        <FlatList
+                            showsHorizontalScrollIndicator={true}
+                            data={this.state.data}
+                            renderItem={({ item }) => (
+                                <View style={{ flexDirection: 'row' }}>
+                                    <View style={styles.textTable}><Text >{item.id}</Text></View>
+                                    <View style={styles.textTable}><Text>{item.category_name}</Text></View>
+                                    <View style={styles.textTable}><Text>{item.service_amount}</Text></View>
+                                    <TouchableOpacity onPress={() => { this.toRemove(item.id) }} activeOpacity={0.7} style={styles.button} >
+                                        <Text style={styles.buttonText}> clear </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                            keyExtractor={item => item.id}
+                        />
+                    </ScrollView>
                 </View>
 
             </SafeAreaView>
@@ -103,6 +96,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         backgroundColor: '#fff'
+        // ,
+        // height: 50
         },
     header:{ 
         fontSize: 50, height: 100, textAlign: "center", color: '#393939' 
@@ -142,6 +137,10 @@ const styles = StyleSheet.create({
     textStyle: {
         fontWeight: 'bold',
         fontSize: 20,
+    },
+    scrollView : {
+        height: screen
+
     }
 
 })

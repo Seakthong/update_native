@@ -38,7 +38,7 @@ TodayScreen = () => {
 }
 NewScreen = () => {
   return (
-    <View style={{ width: "100%", height: "100%", flexDirection: "column",marginTop: 100 }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 100 }}>
       <Category />
     </View>
   );
