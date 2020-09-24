@@ -26,9 +26,13 @@
 
 
 import React, { Component } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, FlatList, TouchableOpacity, } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, FlatList, TouchableOpacity,Dimensions } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import {getReportDuring} from './global'
+import { ScrollView } from 'react-native-gesture-handler';
+ 
+const screen = parseInt(Dimensions.get("screen").height * 0.55);
+
 export default class report extends Component {
   state = {
     startDate: null,
@@ -171,22 +175,25 @@ export default class report extends Component {
             <View style={styles.textHeader}><Text style={styles.textStyle}></Text></View>
           <View style={styles.textHeader}><Text style={styles.textStyle}>{this.state.total}</Text></View>
           </View>
-          <FlatList
-            data={this.state.data}
-            renderItem={({ item }) => {
-             
-              return (
-                <View style={{ flexDirection: 'row' }}>
-                  
-                  <View style={styles.textTable}><Text>{item.name}</Text></View>
-                  <View style={styles.textTable}><Text>{item.service_amount}</Text></View>
-                  <View style={styles.textTable}><Text >{item.total_price}</Text></View>
-                  <View style={styles.textHeader}><Text>{this.total}</Text></View>
-                </View>
-              )
-            }}
-            keyExtractor={item => item.id}
-          />
+          <ScrollView style={styles.scrollView}>
+            <FlatList
+              showsHorizontalScrollIndicator={true}
+              data={this.state.data}
+              renderItem={({ item }) => {
+              
+                return (
+                  <View style={{ flexDirection: 'row' }}>
+                    
+                    <View style={styles.textTable}><Text>{item.name}</Text></View>
+                    <View style={styles.textTable}><Text>{item.service_amount}</Text></View>
+                    <View style={styles.textTable}><Text >{item.total_price}</Text></View>
+                    <View style={styles.textHeader}><Text>{this.total}</Text></View>
+                  </View>
+                )
+              }}
+              keyExtractor={item => item.id}
+            />
+          </ScrollView>
         </View>
       </View>
 
@@ -201,8 +208,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     marginTop: 30,
-    backgroundColor:"#fff"
-
+    // marginBottom: 30,
+    backgroundColor:"#fff",
+    height: screen
   },
   header: {
     fontSize: 50, height: 100, textAlign: "center", color: 'red'
@@ -253,6 +261,10 @@ const styles = StyleSheet.create({
   textStyle: {
     fontWeight: 'bold',
     fontSize: 20,
+  },
+  scrollView: {
+    // height: screen,
+    // paddingBottom : 30
   }
 
 })
